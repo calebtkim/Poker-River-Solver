@@ -19,7 +19,7 @@ public:
 		double normalizing_sum{};
 		vector<double> strategy(NUM_ACTIONS);
 		for (int i{}; i < NUM_ACTIONS; ++i) {
-			strategy[i] = regret_sum[i] > 0.0001 ? regret_sum[i] : 0;
+			strategy[i] = regret_sum[i] > 0 ? regret_sum[i] : 0;
 			normalizing_sum += strategy[i];
 		}
 		for (int i{}; i < NUM_ACTIONS; ++i) {
@@ -43,7 +43,7 @@ vector<double> GetAverageStrategy() {
 		if (normalizing_sum > 0) {
 			average_strategy[i] = strategy_sum[i] / normalizing_sum;
 		} else {
-			// initial strategy profile
+			// Initial strategy profile
 			average_strategy[i] = 1.0 / NUM_ACTIONS;
 		}
 	}
@@ -51,23 +51,23 @@ vector<double> GetAverageStrategy() {
 }
 
 	Node() {
-		// initialize cumulative regret and cumulative strategy tables
+		// Initialize cumulative regret and cumulative strategy tables.
 		regret_sum.assign(NUM_ACTIONS, 0.0);
 		strategy_sum.assign(NUM_ACTIONS, 0.0);
 	}
 };
 
-// information set I
+// Our information set I
 map<string, Node*> node_map{};
 vector<int> cards{1,2,3};
 
 double cfr(string h, double p0, double p1) {
-	// determine player and observe history
+	// Determine player and observe history.
 	int plays = h.size();
 	int player = plays % 2;
 	int opp = 1 - player;
 
-	// return payoff for terminal states, determine if h is terminal
+	// Return payoff for terminal states, determine if h is terminal.
 	if (plays > 1) {
 		bool terminalPass = h[plays - 1] == 'p';
 		bool doubleBet = h.substr(plays-2, plays) == "bb";
@@ -94,11 +94,11 @@ double cfr(string h, double p0, double p1) {
 		node = node_map[info_set];
 	}
 
-	// For each action, recursively call cfr w/ additional history and probability
+	// For each action, recursively call cfr w/ additional history and probability.
 	vector<double> strategy = node->GetStrategy(player == 0 ? p0 : p1);
 	vector<double> util(NUM_ACTIONS, 0.0);
 	double nodeUtil{};
-	// We are at chance node
+	// We are at chance node.
 	for (int i = 0; i < NUM_ACTIONS; ++i) {
 		string nextHistory = h + (i == 0 ? "p" : "b");
 		util[i] = (player == 0)
@@ -107,7 +107,7 @@ double cfr(string h, double p0, double p1) {
 		nodeUtil += strategy[i] * util[i];
 	}
 
-	// for each action, compute and accumulate cfr regret
+	// For each action, compute and accumulate cfr regret.
 	for (int i = 0; i < NUM_ACTIONS; ++i) {
 		double regret = util[i] - nodeUtil;
 		node->regret_sum[i] += (player == 0 ? p1 : p0) * regret;
