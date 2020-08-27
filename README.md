@@ -14,11 +14,11 @@ The following is a list of next steps I have currently planned for this project:
   
 ## References
 
-[1] http://modelai.gettysburg.edu/2013/cfr/cfr.pdf
+[1]http://modelai.gettysburg.edu/2013/cfr/cfr.pdf
 
-[2] https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat
+[2]https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat
 
-[3] https://www.codingthewheel.com/archives/poker-hand-evaluator-roundup/
+[3]https://www.codingthewheel.com/archives/poker-hand-evaluator-roundup/
 
 ## Contact
 
