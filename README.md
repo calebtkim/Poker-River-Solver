@@ -4,18 +4,20 @@ This project contains an implementation of Counterfactual Regret Minimization us
 
 ## Next Steps
 
-The following is a list of next goals I have with this project:
+The following is a list of next steps I have currently planned for this project:
 
   1. Implement CFR algorithm to be able to solve any given board at the river given two players' ranges.
   2. Allow for solving at the turn.
   3. Implement a multi-threaded approach to solving two players' ranges.
   4. Allow for solving at the flop.
-  5. Implement a simple GUI to make everything look more aesthetic.
+  5. Implement a simple GUI to make everything easier to use.
   
 ## References
 
 [1] http://modelai.gettysburg.edu/2013/cfr/cfr.pdf
+
 [2] https://github.com/christophschmalhofer/poker/blob/master/XPokerEval/XPokerEval.TwoPlusTwo/HandRanks.dat
+
 [3] https://www.codingthewheel.com/archives/poker-hand-evaluator-roundup/
 
 ## Contact
