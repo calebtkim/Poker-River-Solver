@@ -53,7 +53,7 @@ vector<double> GetAverageStrategy() {
 	Node() {
 		// Initialize cumulative regret and cumulative strategy tables.
 		regret_sum.assign(NUM_ACTIONS, 0.0);
-		strategy_sum.assign(NUM_ACTIONS, 0.0);
+		strategy_sum.assign(NUM_ACTIONS, 1.0 / NUM_ACTIONS);
 	}
 };
 
@@ -95,13 +95,13 @@ double cfr(string h, double p0, double p1) {
 	}
 
 	// For each action, recursively call cfr w/ additional history and probability.
-	vector<double> strategy = node->GetStrategy(player == 0 ? p0 : p1);
+	vector<double> strategy = node->GetStrategy(plays % 2 == 0 ? p0 : p1);
 	vector<double> util(NUM_ACTIONS, 0.0);
 	double nodeUtil{};
-	// We are at chance node.
+	// We are at choice node.
 	for (int i = 0; i < NUM_ACTIONS; ++i) {
 		string nextHistory = h + (i == 0 ? "p" : "b");
-		util[i] = (player == 0)
+		util[i] = (plays % 2 == 0)
 			? -1 * cfr(nextHistory, p0 * strategy[i], p1)
 			: -1 * cfr(nextHistory, p0, p1 * strategy[i]);
 		nodeUtil += strategy[i] * util[i];
@@ -110,14 +110,14 @@ double cfr(string h, double p0, double p1) {
 	// For each action, compute and accumulate cfr regret.
 	for (int i = 0; i < NUM_ACTIONS; ++i) {
 		double regret = util[i] - nodeUtil;
-		node->regret_sum[i] += (player == 0 ? p1 : p0) * regret;
+		node->regret_sum[i] += (plays % 2 == 0 ? p1 : p0) * regret;
 	}
 	return nodeUtil;
 }
 
 void Train(int iterations) {
 	double util = 0.0;
-	for (int i = 0; i < iterations; i++) {
+	for (int i = 0; i <= iterations; i++) {
 		// Fisher-Yates shuffle
 		for (int c1 = 2; c1 > 0; c1--) {
 			int c2 = (rand() % (c1 + 1));
@@ -125,8 +125,8 @@ void Train(int iterations) {
 		}
 
 		util += cfr("", 1, 1);
-		if (i % 10000 == 0) {
-			cout << "EV player 1: " << util / iterations << "\n";
+		if (i % 500000 == 0) {
+			cout << "EV player 1: " << util / i << " " << node_map.size() << "\n";
 			for (auto& n : node_map) {
 				Node* node = n.second;
 				vector<double> a_s = node->GetAverageStrategy();
@@ -139,5 +139,5 @@ void Train(int iterations) {
 
 int main() {
 	srand((unsigned) time(0));
-	Train(100000);
+	Train(1000000);
 }
